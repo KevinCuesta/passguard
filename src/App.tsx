@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import './App.css'
 import { evaluatePassword } from './services/passwordEvaluator'
+import { improvePassword, type PasswordImprovement } from './services/passwordImprover'
 import {
   calculateCombinations,
   formatCombinations,
@@ -23,6 +24,8 @@ function App() {
   const [options, setOptions] = useState(initialOptions)
   const [generatedPassword, setGeneratedPassword] = useState('')
   const [notice, setNotice] = useState('')
+  const [improvement, setImprovement] = useState<PasswordImprovement | null>(null)
+  const [improvementError, setImprovementError] = useState('')
   const evaluation = useMemo(() => evaluatePassword(password), [password])
   const alphabetSize = getAlphabetSize(options)
   const combinations = alphabetSize ? calculateCombinations(options.length, alphabetSize) : 0n
@@ -41,6 +44,16 @@ function App() {
       setNotice('')
     } catch (error) {
       setNotice(error instanceof Error ? error.message : 'No se pudo generar la contraseña.')
+    }
+  }
+
+  function makeImprovement() {
+    try {
+      setImprovement(improvePassword(password))
+      setImprovementError('')
+    } catch (error) {
+      setImprovement(null)
+      setImprovementError(error instanceof Error ? error.message : 'No se pudo generar una alternativa.')
     }
   }
 
@@ -87,7 +100,11 @@ function App() {
                 id="password-input"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(event) => {
+                  setPassword(event.target.value)
+                  setImprovement(null)
+                  setImprovementError('')
+                }}
                 autoComplete="off"
                 spellCheck={false}
                 placeholder="Escribe una contraseña..."
@@ -113,6 +130,32 @@ function App() {
                 {evaluation.patterns.length > 0 && <p className="pattern-note">Patrones reconocidos: {evaluation.patterns.join(', ')}.</p>}
               </div>
             )}
+
+            <div className="improver-action">
+              <button className="improve-button" type="button" onClick={makeImprovement} disabled={!password.trim()}>
+                <SparkIcon /> Crear alternativa segura
+              </button>
+              <p>Genera una clave nueva al azar; no reutiliza fragmentos de la contraseña analizada.</p>
+              {improvementError && <p className="improvement-error" role="alert">{improvementError}</p>}
+              {improvement && (
+                <div className="improvement-result" aria-live="polite">
+                  <div className="comparison-grid">
+                    <EvaluationSummary title="Original" evaluation={improvement.before} />
+                    <EvaluationSummary title="Alternativa" evaluation={improvement.after} />
+                  </div>
+                  <div className="improved-password">
+                    <div><b>Alternativa generada</b><span>Solo en este dispositivo</span></div>
+                    <code>{improvement.replacement}</code>
+                    <button className="button-secondary" type="button" onClick={() => void copyText(improvement.replacement)}><CopyIcon /> Copiar alternativa</button>
+                  </div>
+                  <p className="improvement-note">
+                    {improvement.after.score > improvement.before.score
+                      ? 'La alternativa obtuvo una mejor evaluación heurística.'
+                      : 'La alternativa mantiene una evaluación alta; el análisis es orientativo.'}
+                  </p>
+                </div>
+              )}
+            </div>
 
             <p className="privacy-hint" id="privacy-hint"><LockIcon /> El análisis se realiza en tu navegador y no guarda la contraseña.</p>
           </section>
@@ -166,6 +209,16 @@ function App() {
 
 function Toggle({ label, shortLabel, checked, onChange }: { label: string; shortLabel: string; checked: boolean; onChange: (checked: boolean) => void }) {
   return <label className={`toggle-option${checked ? ' selected' : ''}`}><input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} /><span className="toggle-box">{checked && <CheckIcon />}</span><span className="toggle-short">{shortLabel}</span><span className="sr-only">{label}</span></label>
+}
+
+function EvaluationSummary({ title, evaluation }: { title: string; evaluation: ReturnType<typeof evaluatePassword> }) {
+  return (
+    <div className={`evaluation-summary-card score-${evaluation.score}`}>
+      <span>{title}</span>
+      <strong>{evaluation.label}</strong>
+      <small>{evaluation.score} / 4 · {evaluation.length} caracteres</small>
+    </div>
+  )
 }
 
 function ShieldIcon() { return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 20 6v5.7c0 4.7-3.2 8-8 9.3-4.8-1.3-8-4.6-8-9.3V6l8-3Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/><path d="m8.8 12 2.1 2.1 4.4-4.6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg> }

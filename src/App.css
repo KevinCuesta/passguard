@@ -85,6 +85,30 @@ h1 span, .generator-intro h2 span { color: var(--mint); }
 .feedback-box ul { margin: 10px 0 0; padding-left: 17px; color: #95a9a6; font-size: 10px; line-height: 1.65; }
 .feedback-box li + li { margin-top: 3px; }
 .pattern-note { margin: 8px 0 0; color: #c3ac82; font-size: 10px; }
+.improver-action { margin: 16px 0 15px; }
+.improve-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 37px; padding: 0 13px; color: #0a2119; background: #79dfb8; border: 1px solid #79dfb8; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; transition: .16s; }
+.improve-button:hover:not(:disabled) { background: #9aebcb; border-color: #9aebcb; }
+.improve-button:disabled { opacity: .45; cursor: not-allowed; }
+.improve-button svg { width: 15px; }
+.improver-action > p { margin: 7px 0 0; color: #7f9593; font-size: 9px; line-height: 1.5; }
+.improver-action > .improvement-error { color: #ff9c96; }
+.improvement-result { margin-top: 12px; padding: 12px; background: #101f20; border: 1px solid #29403d; border-radius: 8px; }
+.comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.evaluation-summary-card { display: flex; flex-direction: column; gap: 5px; min-width: 0; padding: 10px; background: #172b2a; border: 1px solid #2c4340; border-radius: 6px; }
+.evaluation-summary-card > span { color: #859b98; font-size: 9px; }
+.evaluation-summary-card > strong { overflow: hidden; color: #b6ccc1; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.evaluation-summary-card > small { color: #829793; font-size: 9px; }
+.evaluation-summary-card.score-0 > strong, .evaluation-summary-card.score-1 > strong { color: #ff9690; }
+.evaluation-summary-card.score-2 > strong { color: #efbd75; }
+.evaluation-summary-card.score-3 > strong { color: #b2d885; }
+.evaluation-summary-card.score-4 > strong { color: #78dbb7; }
+.improved-password { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; padding: 10px; border: 1px solid #315449; border-radius: 6px; background: #142923; }
+.improved-password > div { display: flex; flex: 1 1 100%; align-items: center; justify-content: space-between; gap: 8px; }
+.improved-password b { color: #c8ddd2; font-size: 10px; }
+.improved-password span { color: #79c5a5; font-size: 8px; text-transform: uppercase; letter-spacing: .5px; }
+.improved-password code { min-width: 0; flex: 1; overflow-wrap: anywhere; color: #a5e9cb; font: 600 12px 'Segoe UI', monospace; letter-spacing: .6px; }
+.improved-password .button-secondary { flex: 0 0 auto; min-height: 31px; font-size: 9px; }
+.improvement-result .improvement-note { margin: 9px 0 0; color: #8ba59a; font-size: 9px; }
 .privacy-hint { display: flex; align-items: center; gap: 7px; margin: 0; padding-top: 13px; border-top: 1px solid #25393a; color: #849b98; font-size: 10px; }
 .privacy-hint svg { color: #71c9a8; }
 .generator-section { padding: 60px 0 73px; border-top: 1px solid rgba(135, 168, 164, .12); display: grid; grid-template-columns: 310px 1fr; gap: 70px; align-items: center; }
