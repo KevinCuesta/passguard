@@ -1,8 +1,8 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import { checkPasswordBreaches, type BreachCheckResult } from './services/breachChecker'
-import { evaluatePassword } from './services/passwordEvaluator'
-import { improvePassword, type PasswordImprovement } from './services/passwordImprover'
+import { createEmptyPasswordEvaluation, type PasswordEvaluation } from './services/passwordTypes'
+import type { PasswordImprovement } from './services/passwordImprover'
 import {
   calculateCombinations,
   formatCombinations,
@@ -21,6 +21,8 @@ const initialOptions: GeneratorOptions = {
 
 function App() {
   const [password, setPassword] = useState('')
+  const [evaluation, setEvaluation] = useState<PasswordEvaluation>(createEmptyPasswordEvaluation)
+  const [evaluationStatus, setEvaluationStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
   const [showPassword, setShowPassword] = useState(false)
   const [options, setOptions] = useState(initialOptions)
   const [generatedPassword, setGeneratedPassword] = useState('')
@@ -29,9 +31,28 @@ function App() {
   const [improvementError, setImprovementError] = useState('')
   const [breachState, setBreachState] = useState<{ status: 'idle' | 'loading' | 'done' | 'error'; result?: BreachCheckResult; message?: string }>({ status: 'idle' })
   const breachRequestId = useRef(0)
-  const evaluation = useMemo(() => evaluatePassword(password), [password])
+  const activePassword = useRef('')
   const alphabetSize = getAlphabetSize(options)
   const combinations = alphabetSize ? calculateCombinations(options.length, alphabetSize) : 0n
+
+  useEffect(() => {
+    let active = true
+    if (!password) {
+      return () => { active = false }
+    }
+
+    void import('./services/passwordEvaluator')
+      .then(({ evaluatePassword }) => {
+        if (!active) return
+        setEvaluation(evaluatePassword(password))
+        setEvaluationStatus('ready')
+      })
+      .catch(() => {
+        if (active) setEvaluationStatus('error')
+      })
+
+    return () => { active = false }
+  }, [password])
   async function copyText(value: string) {
     try {
       await navigator.clipboard.writeText(value)
@@ -50,11 +71,16 @@ function App() {
     }
   }
 
-  function makeImprovement() {
+  async function makeImprovement() {
+    const requestedPassword = password
     try {
-      setImprovement(improvePassword(password))
+      const { improvePassword } = await import('./services/passwordImprover')
+      const result = improvePassword(requestedPassword)
+      if (activePassword.current !== requestedPassword) return
+      setImprovement(result)
       setImprovementError('')
     } catch (error) {
+      if (activePassword.current !== requestedPassword) return
       setImprovement(null)
       setImprovementError(error instanceof Error ? error.message : 'No se pudo generar una alternativa.')
     }
@@ -121,7 +147,11 @@ function App() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(event) => {
-                  setPassword(event.target.value)
+                  const nextPassword = event.target.value
+                  activePassword.current = nextPassword
+                  setPassword(nextPassword)
+                  setEvaluation(createEmptyPasswordEvaluation())
+                  setEvaluationStatus(nextPassword ? 'loading' : 'idle')
                   setImprovement(null)
                   setImprovementError('')
                   breachRequestId.current += 1
@@ -140,10 +170,15 @@ function App() {
               <div className={`strength-meter${password ? ` strength-${evaluation.score}` : ''}`} aria-label={`Fortaleza: ${evaluation.label}`}>
                 {[0, 1, 2, 3, 4].map((segment) => <span key={segment} />)}
               </div>
-              <strong className={`strength-label strength-text-${evaluation.score}`}>{evaluation.label}</strong>
+              <strong className={`strength-label strength-text-${evaluation.score}`}>
+                {evaluationStatus === 'loading' ? 'Analizando…' : evaluationStatus === 'error' ? 'No disponible' : evaluation.label}
+              </strong>
               <span className="length-label">{evaluation.length} caracteres</span>
             </div>
-            <p className="evaluation-summary">{evaluation.details}</p>
+            <p className="evaluation-summary" role="status">
+              {evaluationStatus === 'loading' ? 'Preparando el análisis local…' : evaluation.details}
+            </p>
+            {evaluationStatus === 'error' && <p className="evaluation-error" role="alert">No fue posible cargar el evaluador en este navegador. Recarga la página e inténtalo de nuevo.</p>}
 
             {password && evaluation.recommendations.length > 0 && (
               <div className="feedback-box">
@@ -154,7 +189,7 @@ function App() {
             )}
 
             <div className="improver-action">
-              <button className="improve-button" type="button" onClick={makeImprovement} disabled={!password.trim()}>
+              <button className="improve-button" type="button" onClick={() => void makeImprovement()} disabled={!password.trim() || evaluationStatus !== 'ready'}>
                 <SparkIcon /> Crear alternativa segura
               </button>
               <p>Genera una clave nueva al azar; no reutiliza fragmentos de la contraseña analizada.</p>
@@ -254,7 +289,7 @@ function Toggle({ label, shortLabel, checked, onChange }: { label: string; short
   return <label className={`toggle-option${checked ? ' selected' : ''}`}><input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} /><span className="toggle-box">{checked && <CheckIcon />}</span><span className="toggle-short">{shortLabel}</span><span className="sr-only">{label}</span></label>
 }
 
-function EvaluationSummary({ title, evaluation }: { title: string; evaluation: ReturnType<typeof evaluatePassword> }) {
+function EvaluationSummary({ title, evaluation }: { title: string; evaluation: PasswordEvaluation }) {
   return (
     <div className={`evaluation-summary-card score-${evaluation.score}`}>
       <span>{title}</span>

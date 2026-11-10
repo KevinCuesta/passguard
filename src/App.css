@@ -81,6 +81,7 @@ h1 span, .generator-intro h2 span { color: var(--mint); }
 .strength-text-4 { color: #78dbb7; }
 .length-label { color: #738888; font-size: 10px; }
 .evaluation-summary { min-height: 18px; margin: 11px 0 15px; color: #91a3a3; font-size: 11px; }
+.evaluation-error { margin: -7px 0 12px; color: #ff9893; font-size: 10px; line-height: 1.5; }
 .feedback-box { margin: 14px 0 15px; padding: 13px 14px; background: #172a2a; border: 1px solid #2a4140; border-radius: 8px; }
 .feedback-title { display: flex; align-items: center; gap: 8px; color: #c1d2cd; font-size: 11px; }
 .feedback-symbol { display: grid; place-items: center; width: 15px; height: 15px; color: #8fdbba; border: 1px solid #498875; border-radius: 50%; font: 700 10px Georgia, serif; }

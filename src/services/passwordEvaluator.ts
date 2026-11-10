@@ -1,6 +1,11 @@
 import { ZxcvbnFactory } from '@zxcvbn-ts/core'
 import * as common from '@zxcvbn-ts/language-common'
 import * as spanish from '@zxcvbn-ts/language-es-es'
+import { createEmptyPasswordEvaluation } from './passwordTypes'
+import type { PasswordEvaluation, PasswordStrength } from './passwordTypes'
+
+export { createEmptyPasswordEvaluation } from './passwordTypes'
+export type { PasswordEvaluation, PasswordStrength } from './passwordTypes'
 
 const evaluator = new ZxcvbnFactory({
   dictionary: {
@@ -10,18 +15,6 @@ const evaluator = new ZxcvbnFactory({
   graphs: common.adjacencyGraphs,
   translations: spanish.translations,
 })
-
-export type PasswordStrength = 0 | 1 | 2 | 3 | 4
-
-export interface PasswordEvaluation {
-  score: PasswordStrength
-  length: number
-  label: string
-  details: string
-  weaknesses: string[]
-  recommendations: string[]
-  patterns: string[]
-}
 
 const labels = ['Muy débil', 'Débil', 'Aceptable', 'Fuerte', 'Muy fuerte']
 const details = [
@@ -34,15 +27,7 @@ const details = [
 
 export function evaluatePassword(password: string): PasswordEvaluation {
   if (!password) {
-    return {
-      score: 0,
-      length: 0,
-      label: 'Sin evaluar',
-      details: 'Escribe una contraseña de prueba para analizarla localmente.',
-      weaknesses: [],
-      recommendations: ['Usa una contraseña larga y única para cada cuenta.'],
-      patterns: [],
-    }
+    return createEmptyPasswordEvaluation()
   }
 
   const result = evaluator.check(password)

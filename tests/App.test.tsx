@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { act, cleanup, render, screen } from '@testing-library/react'
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { BreachCheckResult } from '../src/services/breachChecker'
@@ -46,5 +46,20 @@ describe('PassGuard breach-check interface', () => {
     await user.click(screen.getByRole('button', { name: 'Comprobar con Pwned Passwords' }))
 
     expect((await screen.findByRole('alert')).textContent).toContain('No fue posible conectar con Pwned Passwords.')
+  })
+
+  it('does not persist the entered value in browser storage', async () => {
+    const localStorageWrite = vi.spyOn(window.localStorage, 'setItem')
+    const sessionStorageWrite = vi.spyOn(window.sessionStorage, 'setItem')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.type(screen.getByLabelText('Contraseña de prueba'), 'entrada sintetica para revision')
+    await waitFor(() => {
+      expect((screen.getByRole('button', { name: /Crear alternativa segura/ }) as HTMLButtonElement).disabled).toBe(false)
+    })
+
+    expect(localStorageWrite).not.toHaveBeenCalled()
+    expect(sessionStorageWrite).not.toHaveBeenCalled()
   })
 })

@@ -4,4 +4,15 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('@zxcvbn-ts/language-common')) return 'zxcvbn-common-dictionary'
+          if (id.includes('@zxcvbn-ts/language-es-es')) return 'zxcvbn-spanish-dictionary'
+          if (id.includes('@zxcvbn-ts/core')) return 'zxcvbn-engine'
+        },
+      },
+    },
+  },
 })
