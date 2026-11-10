@@ -8,7 +8,8 @@ PassGuard es una aplicación de página única en React + TypeScript + Vite. No 
 
 ```text
 App (estado efímero, interfaz y acciones explícitas)
- ├── passwordEvaluator.ts ── zxcvbn-ts + diccionarios comunes y español
+ ├── passwordTypes.ts ── tipos y evaluación vacía
+ ├── passwordEvaluator.ts ── zxcvbn-ts + diccionarios comunes y español (importación diferida)
  ├── passwordGenerator.ts ── Web Crypto API + muestreo por rechazo
  ├── passwordImprover.ts ── evaluator + generator, sin reutilizar el texto original
  └── breachChecker.ts ── SHA-1 local ── HTTPS: prefijo de 5 caracteres ── HIBP
@@ -18,6 +19,8 @@ App (estado efímero, interfaz y acciones explícitas)
 ## Evaluación y mejorador
 
 La contraseña ingresada vive en estado React y se analiza con zxcvbn-ts. El mejorador reutiliza esa evaluación para mostrar debilidades, pero genera una contraseña independiente con el generador criptográfico existente. Busca una alternativa cuya evaluación sea alta y compara la puntuación y la longitud de ambas. No concatena ni modifica la contraseña original. Si el usuario cambia la entrada, se descarta el resultado anterior.
+
+El evaluador se importa de forma dinámica al recibir una entrada para reducir el JavaScript inicial. La interfaz anuncia el estado de carga y un fallo de importación mediante texto y roles accesibles. El servicio de evaluación y sus diccionarios quedan separados del estado de UI.
 
 ## Generador
 

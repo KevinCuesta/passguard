@@ -13,8 +13,8 @@ PassGuard es un proyecto universitario para seguridad de la información. La ver
 - `src/services/breachChecker.ts`: consulta manual de HIBP mediante k-anonymity; calcula SHA-1 localmente y compara sufijos en el navegador.
 - `src/components/`: controles reutilizables que se extraigan cuando haya una necesidad concreta.
 - `src/styles/`: hojas de estilo separadas si el tamaño de la interfaz lo amerita.
-- `tests/`: pruebas unitarias de servicios; simular respuestas externas con mocks.
-- `docs/` y `anexos/`: documentación académica, fuentes y evidencias.
+- `tests/`: pruebas unitarias de servicios e interfaz; simular respuestas externas con mocks.
+- `docs/` y `anexos/`: documentación académica, fuentes, resultados reproducibles y guía de evidencias.
 
 ## Convenciones
 
@@ -37,6 +37,8 @@ PassGuard es un proyecto universitario para seguridad de la información. La ver
 - Una alternativa debe generarse con aleatoriedad criptográfica independiente; el servicio no debe añadir cambios predecibles a la contraseña original.
 - Mantener claves, contraseñas, hashes y credenciales fuera de consola, commits, capturas y ejemplos de documentación. En tests usar solo valores sintéticos y mockear las respuestas de red.
 - No añadir backend sin autorización explícita.
+- No añadir persistencia, telemetría ni analítica de contraseñas; el alcance acordado es una SPA sin backend.
+- La importación dinámica del evaluador es intencional para aplazar los diccionarios de zxcvbn-ts hasta que se ingrese una contraseña. Mantener visible cualquier advertencia de chunk grande; no elevar el umbral para ocultarla.
 - Explicar que el resultado heurístico y la entropía teórica no equivalen a una garantía de seguridad.
 
 ## Comandos
@@ -48,9 +50,12 @@ npm install
 npm run dev
 npm run build
 npm run test
+npm run test:coverage
+npm run lint
+npm audit
 ```
 
-`npm run test` ejecuta Vitest. Ejecutar las pruebas afectadas y `npm run build` antes de cada commit funcional. No declarar que una validación pasó si no se ejecutó y observó su resultado.
+`npm run test` ejecuta Vitest; `npm run test:coverage` habilita cobertura v8 con umbrales de 80% en los servicios. Ejecutar las pruebas afectadas y `npm run build` antes de cada commit funcional. No declarar que una validación pasó si no se ejecutó y observó su resultado. Las pruebas de HIBP deben ser deterministas y usar mocks; no consultar contraseñas reales ni depender de internet.
 
 ## Trabajo por etapas
 

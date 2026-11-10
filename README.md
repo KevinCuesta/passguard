@@ -14,7 +14,7 @@ PassGuard es un proyecto académico de Ingeniería de Sistemas para evaluar cont
 - React, TypeScript y Vite.
 - `@zxcvbn-ts/core`, diccionarios comunes y español de España.
 - Web Crypto API (`crypto.getRandomValues`) para el generador.
-- Vitest para pruebas unitarias de servicios.
+- Vitest para pruebas unitarias y de interfaz, con cobertura v8.
 - CSS propio, adaptable a escritorio y móvil.
 
 ## Instalación y ejecución
@@ -54,13 +54,14 @@ src/
   components/            # Componentes reutilizables (se ampliará en siguientes fases)
   services/
     passwordEvaluator.ts
+    passwordTypes.ts
     passwordGenerator.ts
     passwordImprover.ts
     breachChecker.ts
   styles/                # Estilos globales/componentes (se ampliará en siguientes fases)
   App.tsx
   main.tsx
-tests/                   # Pruebas unitarias de los servicios
+tests/                   # Pruebas de servicios e interfaz
 docs/
   proyecto-de-aula/
   marco-teorico.md
@@ -75,7 +76,7 @@ anexos/
 
 ## Pruebas y validación
 
-Ejecuta los casos unitarios con `npm run test` y comprueba tipos y compilación de producción con `npm run build`. La suite cubre evaluación, generación, mejorador y respuestas simuladas de la API. Las solicitudes de HIBP en las pruebas se simulan; no dependen de la disponibilidad del servicio.
+Ejecuta `npm run test`, `npm run test:coverage`, `npm run lint` y `npm run build`. Las pruebas de HIBP usan mocks y no dependen de internet. Resultados del corte del 10 de noviembre de 2026: 31 pruebas aprobadas; cobertura de líneas 98.71%; lint sin hallazgos; compilación correcta. El bundle mantiene una advertencia por el diccionario español diferido (839.20 kB). El detalle está en [resultados de validación](anexos/pruebas/resultados.md).
 
 ## Privacidad y limitaciones
 
@@ -83,7 +84,7 @@ Ejecuta los casos unitarios con `npm run test` y comprueba tipos y compilación 
 - La consulta de Have I Been Pwned no se ejecuta al escribir. Al pulsar el botón, el navegador calcula el SHA-1 y envía únicamente los primeros cinco caracteres; el hash completo y la contraseña no se transmiten. La búsqueda usa el servicio externo HIBP y requiere conexión.
 - Que una contraseña no aparezca en los datos consultados no demuestra que nunca haya sido expuesta ni que sea segura.
 - El paquete de idioma disponible para español es `language-es-es`; la interfaz está en español latinoamericano, pero algunos textos de retroalimentación de zxcvbn-ts provienen del diccionario español de España.
-- La compilación actual avisa que el paquete JavaScript principal supera 500 kB (aprox. 1.54 MB sin comprimir); los diccionarios de zxcvbn-ts representan la mayor parte del tamaño y pueden dividirse bajo demanda en una iteración posterior.
+- El evaluador y los diccionarios zxcvbn-ts se cargan bajo demanda. El JavaScript inicial mide 243.86 kB minificado (76.11 kB gzip); Vite aún advierte que el chunk español diferido pesa 839.20 kB. El límite de advertencia no se elevó.
 - La aplicación no guarda contraseñas en almacenamiento web ni las incluye en solicitudes. Las contraseñas de evaluación y mejora viven en memoria mientras la página está abierta; se eliminan al recargar o cerrar la pestaña.
 - El botón copiar requiere permiso de portapapeles del navegador y un contexto seguro como localhost o HTTPS.
 
@@ -108,3 +109,7 @@ Institución y docente: **pendientes de confirmar**.
 - FIDO Alliance, Passkeys: <https://fidoalliance.org/passkeys/>
 - zxcvbn-ts: <https://github.com/zxcvbn-ts/zxcvbn>
 - MDN Web Crypto API: <https://developer.mozilla.org/docs/Web/API/Crypto/getRandomValues>
+- Informe académico base: [docs/proyecto-de-aula/informe-academico.md](docs/proyecto-de-aula/informe-academico.md)
+- Guía de capturas pendientes: [anexos/evidencias/guia-capturas.md](anexos/evidencias/guia-capturas.md)
+
+Repositorio: <https://github.com/KevinCuesta/passguard>

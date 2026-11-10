@@ -9,3 +9,7 @@
 7. En **Generación**, ajusta longitud y conjuntos, pulsa **Generar contraseña** y usa **Copiar** explícitamente. Trata el portapapeles como información sensible.
 
 PassGuard no persiste contraseñas. Al cerrar o recargar la pestaña, el estado en memoria desaparece.
+
+## Teclado y accesibilidad
+
+Usa `Tab` y `Shift+Tab` para recorrer controles y `Enter` o `Espacio` para activar botones y casillas. El campo tiene una etiqueta asociada y los estados de consulta se anuncian en la región de estado. La compatibilidad concreta con lectores de pantalla y el contraste WCAG no se ha auditado; consulta la matriz de calidad antes de presentar esos aspectos como verificados.
