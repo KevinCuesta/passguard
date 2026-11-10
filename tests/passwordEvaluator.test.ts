@@ -27,9 +27,25 @@ describe('evaluatePassword', () => {
     expect(result.patterns).toContain('repeat')
   })
 
+  it('identifies sequences and handles special characters', () => {
+    const sequence = evaluatePassword('abcdef123456')
+    const specialCharacters = evaluatePassword('ñ[]{}&%$#¡!?')
+
+    expect(sequence.patterns).toContain('sequence')
+    expect(specialCharacters.length).toBe(12)
+    expect(specialCharacters.score).toBeGreaterThanOrEqual(0)
+    expect(specialCharacters.score).toBeLessThanOrEqual(4)
+  })
+
   it('rates a freshly generated random password as strong', () => {
     const password = generatePassword({ length: 24, lowercase: true, uppercase: true, numbers: true, symbols: true })
 
     expect(evaluatePassword(password).score).toBeGreaterThanOrEqual(3)
+  })
+
+  it('returns the same result for the same input', () => {
+    const probe = 'secuencia-sintetica-para-consistencia'
+
+    expect(evaluatePassword(probe)).toEqual(evaluatePassword(probe))
   })
 })

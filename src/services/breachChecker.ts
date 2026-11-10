@@ -21,7 +21,12 @@ export async function checkPasswordBreaches(
   }
 
   // SHA-1 is used only to query the HIBP range API, never to protect or store passwords.
-  const digest = await globalThis.crypto.subtle.digest('SHA-1', new TextEncoder().encode(password))
+  let digest: ArrayBuffer
+  try {
+    digest = await globalThis.crypto.subtle.digest('SHA-1', new TextEncoder().encode(password))
+  } catch {
+    throw new Error('No fue posible calcular el resumen necesario para la consulta en este navegador.')
+  }
   const hash = toHex(new Uint8Array(digest))
   const prefix = hash.slice(0, 5)
   const suffix = hash.slice(5)
@@ -45,7 +50,12 @@ export async function checkPasswordBreaches(
     throw new Error('Pwned Passwords no pudo completar la consulta. Inténtalo de nuevo más tarde.')
   }
 
-  const body = await response.text()
+  let body: string
+  try {
+    body = await response.text()
+  } catch {
+    throw new Error('No fue posible leer la respuesta de Pwned Passwords. Inténtalo de nuevo más tarde.')
+  }
   for (const line of body.split(/\r?\n/)) {
     const [candidateSuffix, countText] = line.trim().split(':', 2)
     if (candidateSuffix?.toUpperCase() !== suffix || !countText || !/^\d+$/.test(countText)) continue

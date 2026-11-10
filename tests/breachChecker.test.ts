@@ -39,6 +39,15 @@ describe('checkPasswordBreaches', () => {
     await expect(checkPasswordBreaches(testOnlyInput, fetcher)).resolves.toEqual({ found: false, count: 0 })
   })
 
+  it('returns not found for an empty response and ignores padded zero-count rows', async () => {
+    const hash = await sha1Hex(testOnlyInput)
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response(`${hash.slice(5)}:0\r\n`))
+
+    await expect(checkPasswordBreaches(testOnlyInput, fetcher)).resolves.toEqual({ found: false, count: 0 })
+    fetcher.mockResolvedValueOnce(new Response(''))
+    await expect(checkPasswordBreaches(testOnlyInput, fetcher)).resolves.toEqual({ found: false, count: 0 })
+  })
+
   it('rejects empty input without making a request', async () => {
     const fetcher = vi.fn<typeof fetch>()
 
@@ -56,5 +65,31 @@ describe('checkPasswordBreaches', () => {
     const fetcher = vi.fn<typeof fetch>().mockRejectedValue(new TypeError('offline'))
 
     await expect(checkPasswordBreaches(testOnlyInput, fetcher)).rejects.toThrow(/Revisa la conexión/)
+  })
+
+  it('handles failures while calculating the digest', async () => {
+    vi.spyOn(globalThis.crypto.subtle, 'digest').mockRejectedValue(new Error('digest failure'))
+    const fetcher = vi.fn<typeof fetch>()
+
+    await expect(checkPasswordBreaches(testOnlyInput, fetcher)).rejects.toThrow(/No fue posible calcular/)
+    expect(fetcher).not.toHaveBeenCalled()
+  })
+
+  it('handles a response body that cannot be read', async () => {
+    const response = {
+      ok: true,
+      text: vi.fn().mockRejectedValue(new TypeError('stream failed')),
+    } as unknown as Response
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(response)
+
+    await expect(checkPasswordBreaches(testOnlyInput, fetcher)).rejects.toThrow(/No fue posible leer la respuesta/)
+  })
+
+  it('reports when Web Crypto is unavailable and does not request the API', async () => {
+    vi.stubGlobal('crypto', {})
+    const fetcher = vi.fn<typeof fetch>()
+
+    await expect(checkPasswordBreaches(testOnlyInput, fetcher)).rejects.toThrow(/Web Crypto/)
+    expect(fetcher).not.toHaveBeenCalled()
   })
 })
