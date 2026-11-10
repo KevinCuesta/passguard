@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import './App.css'
+import { checkPasswordBreaches, type BreachCheckResult } from './services/breachChecker'
 import { evaluatePassword } from './services/passwordEvaluator'
 import { improvePassword, type PasswordImprovement } from './services/passwordImprover'
 import {
@@ -26,6 +27,8 @@ function App() {
   const [notice, setNotice] = useState('')
   const [improvement, setImprovement] = useState<PasswordImprovement | null>(null)
   const [improvementError, setImprovementError] = useState('')
+  const [breachState, setBreachState] = useState<{ status: 'idle' | 'loading' | 'done' | 'error'; result?: BreachCheckResult; message?: string }>({ status: 'idle' })
+  const breachRequestId = useRef(0)
   const evaluation = useMemo(() => evaluatePassword(password), [password])
   const alphabetSize = getAlphabetSize(options)
   const combinations = alphabetSize ? calculateCombinations(options.length, alphabetSize) : 0n
@@ -54,6 +57,22 @@ function App() {
     } catch (error) {
       setImprovement(null)
       setImprovementError(error instanceof Error ? error.message : 'No se pudo generar una alternativa.')
+    }
+  }
+
+  async function checkBreaches() {
+    const requestId = ++breachRequestId.current
+    setBreachState({ status: 'loading' })
+    try {
+      const result = await checkPasswordBreaches(password)
+      if (requestId === breachRequestId.current) setBreachState({ status: 'done', result })
+    } catch (error) {
+      if (requestId === breachRequestId.current) {
+        setBreachState({
+          status: 'error',
+          message: error instanceof Error ? error.message : 'No fue posible completar la consulta.',
+        })
+      }
     }
   }
 
@@ -104,6 +123,8 @@ function App() {
                   setPassword(event.target.value)
                   setImprovement(null)
                   setImprovementError('')
+                  breachRequestId.current += 1
+                  setBreachState({ status: 'idle' })
                 }}
                 autoComplete="off"
                 spellCheck={false}
@@ -156,6 +177,27 @@ function App() {
                 </div>
               )}
             </div>
+
+            <section className="breach-checker" aria-labelledby="breach-title">
+              <div className="breach-heading">
+                <div><span className="section-kicker">03 / FILTRACIONES</span><h3 id="breach-title">Comprueba filtraciones conocidas</h3></div>
+                <span className="hibp-mark">HIBP</span>
+              </div>
+              <p>Solo consulta cuando pulses el botón. La clave se resume localmente con SHA‑1 y solo se envían cinco caracteres del hash.</p>
+              <button className="button-secondary breach-button" type="button" onClick={() => void checkBreaches()} disabled={!password || breachState.status === 'loading'}>
+                {breachState.status === 'loading' ? 'Consultando…' : 'Comprobar con Pwned Passwords'}
+              </button>
+              {breachState.status === 'loading' && <p className="breach-loading" role="status">Consultando el rango de hashes…</p>}
+              {breachState.status === 'error' && <p className="breach-error" role="alert">{breachState.message}</p>}
+              {breachState.status === 'done' && breachState.result && (
+                <div className={`breach-result ${breachState.result.found ? 'breach-found' : 'breach-not-found'}`} role="status">
+                  <b>{breachState.result.found
+                    ? `Encontrada ${breachState.result.count.toLocaleString('es-CO')} ${breachState.result.count === 1 ? 'vez' : 'veces'} en el conjunto consultado.`
+                    : 'No aparece en los hashes consultados.'}</b>
+                  <span>Que no aparezca no garantiza que sea segura.</span>
+                </div>
+              )}
+            </section>
 
             <p className="privacy-hint" id="privacy-hint"><LockIcon /> El análisis se realiza en tu navegador y no guarda la contraseña.</p>
           </section>

@@ -109,6 +109,20 @@ h1 span, .generator-intro h2 span { color: var(--mint); }
 .improved-password code { min-width: 0; flex: 1; overflow-wrap: anywhere; color: #a5e9cb; font: 600 12px 'Segoe UI', monospace; letter-spacing: .6px; }
 .improved-password .button-secondary { flex: 0 0 auto; min-height: 31px; font-size: 9px; }
 .improvement-result .improvement-note { margin: 9px 0 0; color: #8ba59a; font-size: 9px; }
+.breach-checker { margin: 17px 0 15px; padding: 14px; background: #101e20; border: 1px solid #2a4040; border-radius: 8px; }
+.breach-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.breach-heading h3 { margin: 6px 0 0; color: #dce8e4; font: 700 13px 'Segoe UI', sans-serif; }
+.hibp-mark { display: grid; place-items: center; width: 36px; height: 28px; color: #c8d9d3; background: #1c3231; border: 1px solid #38514e; border-radius: 5px; font-size: 9px; font-weight: 800; letter-spacing: .7px; }
+.breach-checker > p { margin: 9px 0 11px; color: #839896; font-size: 9px; line-height: 1.55; }
+.breach-button { min-height: 33px; font-size: 9px; }
+.breach-button:disabled { cursor: not-allowed; opacity: .5; }
+.breach-checker > .breach-loading, .breach-checker > .breach-error { margin-bottom: 0; }
+.breach-checker > .breach-loading { color: #9fcabb; }
+.breach-checker > .breach-error { color: #ff9893; }
+.breach-result { display: flex; flex-direction: column; gap: 5px; margin-top: 11px; padding: 10px; border-radius: 6px; font-size: 10px; line-height: 1.5; }
+.breach-result > span { color: #a7b7b1; font-size: 9px; }
+.breach-found { color: #ffaaa2; background: #321f21; border: 1px solid #64383b; }
+.breach-not-found { color: #91dfb8; background: #183029; border: 1px solid #315544; }
 .privacy-hint { display: flex; align-items: center; gap: 7px; margin: 0; padding-top: 13px; border-top: 1px solid #25393a; color: #849b98; font-size: 10px; }
 .privacy-hint svg { color: #71c9a8; }
 .generator-section { padding: 60px 0 73px; border-top: 1px solid rgba(135, 168, 164, .12); display: grid; grid-template-columns: 310px 1fr; gap: 70px; align-items: center; }
