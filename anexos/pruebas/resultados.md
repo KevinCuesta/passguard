@@ -5,7 +5,7 @@
 | Comando | Resultado observado |
 |---|---|
 | `npm install` | Correcto; dependencias al día, 159 paquetes auditados por npm; 0 vulnerabilidades reportadas. npm mostró un aviso de política de scripts pendientes de aprobación para `esbuild` (no impidió la instalación). |
-| `npm run test:coverage` | 6 archivos aprobados; 31 pruebas aprobadas; 0 fallidas. Servicios: 98.82% statements, 98.33% branches, 100% functions, 98.71% lines. Umbrales configurados: 80%. |
+| `npm run test` y `npm run test:coverage` | 6 archivos aprobados; 36 pruebas aprobadas; 0 fallidas. Servicios: 98.82% statements, 98.33% branches, 100% functions, 98.71% lines. Umbrales configurados: 80%. |
 | `npm run lint` | Correcto, sin hallazgos después de retirar una actualización redundante de estado en un efecto React. |
 | `npm run build` | Correcto: TypeScript y Vite finalizaron. JS inicial: 243.86 kB minificado / 76.11 kB gzip. |
 | Advertencia de build | Vite mantiene advertencia para el chunk `zxcvbn-spanish-dictionary` de 839.20 kB. Se descarga de forma diferida al necesitar evaluación; no se elevó el umbral de advertencia. |
@@ -23,6 +23,8 @@
 | CSS de entrada | 17.40 kB | 4.76 kB |
 
 La advertencia se conserva como hallazgo. Aunque el bundle inicial se redujo con imports dinámicos y chunks separados, el primer análisis de una contraseña aún debe descargar los diccionarios necesarios.
+
+En Fase 4 se verificó `npm run dev` mediante HTTP 200 local. No se pudo abrir la interfaz en un navegador controlado: la herramienta CUA falló al inicializar los recursos de su kernel. Por ello, los tamaños móvil/escritorio, lectores de pantalla y contraste siguen pendientes en la [matriz manual](matriz-validacion-manual.md); no se afirma compatibilidad visual que no se haya comprobado.
 
 ## Interpretación
 

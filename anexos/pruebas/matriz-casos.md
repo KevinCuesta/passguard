@@ -35,7 +35,12 @@ Los casos se ejecutan con Vitest. Todas las entradas son sintéticas y la red de
 | UI-01 | Interfaz | Escribir valor y no pulsar el verificador | No inicia consulta; click muestra carga y resultado | Aprobado |
 | UI-02 | Interfaz | Error simulado de HIBP | Anuncia alerta accesible | Aprobado |
 | UI-03 | Privacidad UI | Escribir valor sintético | No llama a `localStorage.setItem` ni `sessionStorage.setItem` | Aprobado |
+| UI-04 | HIBP UI | Respuesta simulada sin coincidencia | Mensaje de no coincidencia y advertencia visible | Aprobado |
+| UI-05 | Formulario | Activar botón mostrar/ocultar | Cambia tipo del campo y nombre accesible | Aprobado |
+| UI-06 | Teclado | Pulsar Tab al iniciar | Foco en enlace para saltar al contenido | Aprobado |
+| UI-07 | Generador y portapapeles | Generar longitud predeterminada y pulsar copiar | 16 caracteres; no copia hasta acción explícita; resultado de copia anunciado | Aprobado |
+| UI-08 | Portapapeles | Denegar permiso de copia en mock | Mensaje comprensible y sin fallo de UI | Aprobado |
 
-**Resumen:** 31 casos aprobados, 0 fallidos, en 6 archivos de prueba. La cobertura se refiere a servicios TypeScript, no al porcentaje de componentes UI cubiertos. La suite no prueba distribución estadística con muestreo masivo: el caso GE-07 comprueba directamente que la cola incompleta se rechaza.
+**Resumen actualizado:** 36 casos aprobados, 0 fallidos, en 6 archivos de prueba. La cobertura se refiere a servicios TypeScript, no al porcentaje de componentes UI cubiertos. La suite no prueba distribución estadística con muestreo masivo: el caso GE-07 comprueba directamente que la cola incompleta se rechaza.
 
 La ausencia de reutilización de fragmentos se sostiene por la inspección de implementación del mejorador, que llama a un generador independiente con opciones fijas; la prueba automatizada por sí sola verifica que no se acepta la contraseña original completa, no una búsqueda exhaustiva de subcadenas.

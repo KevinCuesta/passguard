@@ -275,7 +275,7 @@ function App() {
         <section className="privacy-banner" id="privacidad">
           <div className="privacy-banner-icon"><ShieldIcon /></div>
           <div><span className="section-kicker">PRIVACIDAD PRIMERO</span><h2>Tus contraseñas son solo tuyas.</h2><p>PassGuard no almacena ni envía la contraseña completa. Si solicitas consultar filtraciones, solo comparte cinco caracteres de su hash con HIBP.</p></div>
-          <div className="privacy-seal"><span><CheckIcon /></span><b>Sin datos<br />enviados</b></div>
+          <div className="privacy-seal"><span><CheckIcon /></span><b>Sin contraseña<br />enviada</b></div>
         </section>
       </main>
 
