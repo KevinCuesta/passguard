@@ -1,27 +1,34 @@
-# Arquitectura inicial
+# Arquitectura de PassGuard
 
 ## Estado
 
-Documento preliminar de la Fase 1. Describe la versión actual y se actualizará al añadir el mejorador, la consulta de filtraciones y las pruebas.
+PassGuard es una aplicación de página única en React + TypeScript + Vite. No hay backend ni base de datos. El evaluador, generador y mejorador funcionan en el navegador. Solo el chequeo manual de filtraciones requiere conexión a Have I Been Pwned (HIBP).
 
-## Vista general
-
-PassGuard es una aplicación de página única que se ejecuta en el navegador. No existe servidor de aplicación ni almacenamiento persistente.
+## Componentes y servicios
 
 ```text
-App (estado de página, presentación e interacción)
+App (estado efímero, interfaz y acciones explícitas)
  ├── passwordEvaluator.ts ── zxcvbn-ts + diccionarios comunes y español
- └── passwordGenerator.ts ── Web Crypto API
+ ├── passwordGenerator.ts ── Web Crypto API + muestreo por rechazo
+ ├── passwordImprover.ts ── evaluator + generator, sin reutilizar el texto original
+ └── breachChecker.ts ── SHA-1 local ── HTTPS: prefijo de 5 caracteres ── HIBP
+                                                     └─ sufijo comparado localmente
 ```
 
-## Flujo de evaluación
+## Evaluación y mejorador
 
-La contraseña ingresada se conserva en estado React y se entrega al servicio local `evaluatePassword`. zxcvbn-ts produce una puntuación, coincidencias de patrones y sugerencias. El componente muestra un resumen; no guarda la entrada ni hace solicitudes de red.
+La contraseña ingresada vive en estado React y se analiza con zxcvbn-ts. El mejorador reutiliza esa evaluación para mostrar debilidades, pero genera una contraseña independiente con el generador criptográfico existente. Busca una alternativa cuya evaluación sea alta y compara la puntuación y la longitud de ambas. No concatena ni modifica la contraseña original. Si el usuario cambia la entrada, se descarta el resultado anterior.
 
-## Flujo del generador
+## Generador
 
-El usuario configura la longitud y los conjuntos habilitados. El servicio valida el rango (8–64), compone el alfabeto y obtiene cada índice mediante `crypto.getRandomValues` con rechazo de los valores fuera del múltiplo más alto del alfabeto. Esto evita el sesgo que resultaría de aplicar módulo directamente sobre un byte. El cálculo teórico usa `N^L`.
+El usuario configura la longitud y los conjuntos habilitados. `passwordGenerator.ts` valida el rango (8–64), compone el alfabeto y obtiene cada índice mediante `crypto.getRandomValues` con rechazo de los valores fuera del múltiplo más alto del alfabeto. El cálculo teórico usa `N^L`; presupone selecciones independientes y uniformes.
 
-## Privacidad y límites
+## Consulta de filtraciones
 
-Los datos viven solo mientras existe la página. El portapapeles se modifica únicamente tras pulsar Copiar. La evaluación es heurística y las combinaciones describen supuestos de selección aleatoria; ninguno constituye una garantía sobre cuentas reales. Las siguientes fases deberán documentar explícitamente el flujo de minimización para HIBP.
+La consulta solo empieza al pulsar el botón. `breachChecker.ts` codifica la contraseña como UTF-8, calcula SHA-1 con `crypto.subtle.digest` y solicita `https://api.pwnedpasswords.com/range/{prefijo}` con los primeros cinco caracteres. HIBP devuelve hashes que comparten ese prefijo; PassGuard compara el sufijo restante localmente y descarta las filas de relleno con conteo cero. La petición activa `Add-Padding`, no envía la contraseña ni el hash completo y desactiva caché y referer.
+
+Las respuestas y contraseñas permanecen en memoria de la página. Los errores de conexión se presentan en el estado del verificador; no bloquean los otros servicios. Una respuesta sin coincidencia solo significa que no se encontró el hash en el conjunto consultado.
+
+## Límites
+
+zxcvbn-ts es una estimación heurística. HIBP es un servicio externo con un corpus que puede no incluir todas las filtraciones. SHA-1 aquí solo sirve como formato de búsqueda para la API; no se usa como hash de almacenamiento. La aplicación no implementa autenticación de cuentas ni almacenamiento de credenciales.

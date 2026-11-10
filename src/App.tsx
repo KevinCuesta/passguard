@@ -84,6 +84,7 @@ function App() {
   return (
     <div className="app-shell">
       <header className="topbar">
+        <a className="skip-link" href="#inicio">Saltar al contenido</a>
         <a className="brand" href="#inicio" aria-label="PassGuard, inicio">
           <span className="brand-mark" aria-hidden="true"><ShieldIcon /></span>
           <span>pass<span>guard</span></span>
@@ -93,15 +94,15 @@ function App() {
           <a href="#generador">Generador</a>
           <a href="#privacidad">Privacidad</a>
         </nav>
-        <span className="local-badge"><span /> 100% local</span>
+        <span className="local-badge"><span /> Claves locales</span>
       </header>
 
-      <main id="inicio">
+      <main id="inicio" tabIndex={-1}>
         <section className="hero-section">
           <div className="hero-copy">
             <div className="eyebrow"><span className="eyebrow-line" /> TU SEGURIDAD, BAJO TU CONTROL</div>
             <h1>Contraseñas fuertes.<br /><span>Tranquilidad real.</span></h1>
-            <p className="hero-description">Evalúa la fortaleza de tus claves y crea nuevas con aleatoriedad criptográfica. Todo sucede en tu navegador.</p>
+            <p className="hero-description">Evalúa y genera claves en tu navegador. La verificación opcional de filtraciones comparte solo un prefijo de hash.</p>
             <div className="hero-points">
               <div><span className="point-icon"><LockIcon /></span><span><b>Privado por diseño</b><small>Tus claves no salen del dispositivo</small></span></div>
               <div><span className="point-icon"><SparkIcon /></span><span><b>Análisis inteligente</b><small>Reconoce patrones comunes</small></span></div>
@@ -178,7 +179,7 @@ function App() {
               )}
             </div>
 
-            <section className="breach-checker" aria-labelledby="breach-title">
+            <section className="breach-checker" aria-labelledby="breach-title" aria-busy={breachState.status === 'loading'}>
               <div className="breach-heading">
                 <div><span className="section-kicker">03 / FILTRACIONES</span><h3 id="breach-title">Comprueba filtraciones conocidas</h3></div>
                 <span className="hibp-mark">HIBP</span>
@@ -238,7 +239,7 @@ function App() {
 
         <section className="privacy-banner" id="privacidad">
           <div className="privacy-banner-icon"><ShieldIcon /></div>
-          <div><span className="section-kicker">PRIVACIDAD PRIMERO</span><h2>Tus contraseñas son solo tuyas.</h2><p>PassGuard las analiza en memoria dentro de esta pestaña. No usamos almacenamiento, analítica ni enviamos tus claves a ningún servidor.</p></div>
+          <div><span className="section-kicker">PRIVACIDAD PRIMERO</span><h2>Tus contraseñas son solo tuyas.</h2><p>PassGuard no almacena ni envía la contraseña completa. Si solicitas consultar filtraciones, solo comparte cinco caracteres de su hash con HIBP.</p></div>
           <div className="privacy-seal"><span><CheckIcon /></span><b>Sin datos<br />enviados</b></div>
         </section>
       </main>

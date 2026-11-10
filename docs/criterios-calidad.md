@@ -1,8 +1,10 @@
-# Criterios de calidad — iniciales
+# Criterios de calidad
 
-- **Funcionalidad:** análisis con zxcvbn-ts y generación de longitud seleccionable.
-- **Seguridad:** aleatoriedad con Web Crypto API; rechazo de sesgo de módulo; sin persistencia, analítica o envío remoto de contraseñas.
-- **Usabilidad:** contenido en español, estados visibles, mensajes comprensibles y flujo adaptable a móvil.
-- **Accesibilidad:** etiquetas de formulario, navegación por teclado, foco visible y estado del análisis anunciado.
-- **Mantenibilidad:** lógica de evaluación y generación separada en servicios TypeScript.
-- **Verificación:** la compilación se comprobará en Fase 1. Pruebas automatizadas y evidencias reproducibles están pendientes para Fase 3.
+- **Funcionalidad:** evaluación local zxcvbn-ts, generación, mejorador y consulta manual de filtraciones.
+- **Seguridad:** aleatoriedad con Web Crypto API; muestreo sin sesgo de módulo; ninguna contraseña persistida o enviada; HIBP recibe solo el prefijo de cinco caracteres y sus respuestas se comparan localmente.
+- **Usabilidad:** interfaz en español, errores comprensibles, estados de carga y resultados, diseño adaptable y controles de copiar explícitos.
+- **Accesibilidad:** etiquetas asociadas, estados anunciados con ARIA, foco visible, acciones disponibles por teclado y contraste de controles.
+- **Mantenibilidad:** responsabilidades de evaluación, generación, mejora y HIBP separadas en servicios TypeScript.
+- **Pruebas:** mocks para la API externa; cobertura de entradas vacías, puntuación, salida del generador, configuración inválida y errores de red/HTTP. Ejecutar `npm run test` y `npm run build` antes de cambios de entrega; registrar los resultados reales.
+
+La interfaz usa una contraseña de factor único como entrada de ejemplo, pero no es un verificador de cuentas. La longitud de su generador no sustituye una política de autenticación NIST.
