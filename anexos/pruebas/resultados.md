@@ -8,6 +8,7 @@
 | `npm run test` y `npm run test:coverage` | 6 archivos aprobados; 36 pruebas aprobadas; 0 fallidas. Servicios: 98.82% statements, 98.33% branches, 100% functions, 98.71% lines. Umbrales configurados: 80%. |
 | `npm run lint` | Correcto, sin hallazgos después de retirar una actualización redundante de estado en un efecto React. |
 | `npm run build` | Correcto: TypeScript y Vite finalizaron. JS inicial: 243.86 kB minificado / 76.11 kB gzip. |
+| Build de Pages y `vite preview` | Con `GITHUB_PAGES=true`, `/passguard/` y el asset JS inicial respondieron HTTP 200; el título servido fue `PassGuard — Seguridad de contraseñas`. No es despliegue remoto. |
 | Advertencia de build | Vite mantiene advertencia para el chunk `zxcvbn-spanish-dictionary` de 839.20 kB. Se descarga de forma diferida al necesitar evaluación; no se elevó el umbral de advertencia. |
 | `npm audit` | 0 vulnerabilidades en la última auditoría completa tras `npm install`. No se ejecutó `npm audit fix`. |
 | `npm run dev -- --host 127.0.0.1` | Vite quedó listo en `http://127.0.0.1:5174/` porque el puerto 5173 ya estaba ocupado. Se comprobó respuesta HTTP 200 y título `PassGuard — Seguridad de contraseñas`; el proceso iniciado para la verificación se cerró después. |

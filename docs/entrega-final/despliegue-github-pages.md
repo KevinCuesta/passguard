@@ -13,7 +13,7 @@ El proyecto es estático (Vite/React) y puede servirse en GitHub Pages sin backe
 
 **Estado al preparar este documento:** pendiente del push, de seleccionar GitHub Actions como source en Settings y de una ejecución exitosa del workflow. La URL es prevista; no se afirma que esté publicada o accesible todavía.
 
-La configuración local se comprobó construyendo con `GITHUB_PAGES=true` y verificando que `dist/index.html` apunte a `/passguard/assets/`; luego se compiló sin la variable y se confirmó la ruta local `/assets/`. No se realizó una publicación remota.
+La configuración se comprobó construyendo con `GITHUB_PAGES=true`, verificando que `dist/index.html` apunte a `/passguard/assets/` y sirviendo el preview: tanto `/passguard/` como el JS inicial respondieron HTTP 200. Luego se compiló sin la variable y se confirmó la ruta local `/assets/`. Esto valida el artefacto local, no una publicación remota.
 
 ## Configuración de rutas
 

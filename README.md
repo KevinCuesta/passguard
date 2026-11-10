@@ -51,14 +51,12 @@ El conteo de combinaciones supone que cada posición se elige de forma independi
 
 ```text
 src/
-  components/            # Componentes reutilizables (se ampliará en siguientes fases)
   services/
     passwordEvaluator.ts
     passwordTypes.ts
     passwordGenerator.ts
     passwordImprover.ts
     breachChecker.ts
-  styles/                # Estilos globales/componentes (se ampliará en siguientes fases)
   App.tsx
   main.tsx
 tests/                   # Pruebas de servicios e interfaz
@@ -76,7 +74,7 @@ anexos/
 
 ## Pruebas y validación
 
-Ejecuta `npm run test`, `npm run test:coverage`, `npm run lint` y `npm run build`. Las pruebas de HIBP usan mocks y no dependen de internet. Resultados del corte del 10 de noviembre de 2026: 31 pruebas aprobadas; cobertura de líneas 98.71%; lint sin hallazgos; compilación correcta. El bundle mantiene una advertencia por el diccionario español diferido (839.20 kB). El detalle está en [resultados de validación](anexos/pruebas/resultados.md).
+Ejecuta `npm run test`, `npm run test:coverage`, `npm run lint` y `npm run build`. Las pruebas de HIBP usan mocks y no dependen de internet. Resultados del corte del 10 de noviembre de 2026: 36 pruebas aprobadas; cobertura de líneas de servicios 98.71%; lint sin hallazgos; compilación correcta. El bundle mantiene una advertencia por el diccionario español diferido (839.20 kB). El detalle está en [resultados de validación](anexos/pruebas/resultados.md).
 
 ## Privacidad y limitaciones
 
@@ -97,6 +95,14 @@ Integrantes:
 - Andrea Catalina Cortes
 
 Institución y docente: **pendientes de confirmar**.
+
+## Entrega y despliegue
+
+- Informe académico editable: [docs/proyecto-de-aula/informe-academico.md](docs/proyecto-de-aula/informe-academico.md). La plantilla institucional todavía debe confirmarse.
+- Guion y apoyo para la sustentación: [guion de cinco minutos](docs/presentacion/guion-sustentacion.md) y [estructura de diapositivas](docs/presentacion/estructura-diapositivas.md).
+- Estado de pendientes: [checklist final](docs/entrega-final/checklist-entrega.md).
+- Despliegue preparado con GitHub Actions: [instrucciones de Pages](docs/entrega-final/despliegue-github-pages.md). Debe activarse Pages en Settings y completarse un workflow después del push. URL prevista, aún no verificada: <https://kevincuesta.github.io/passguard/>.
+- Capturas manuales: [índice de evidencias](anexos/evidencias/indice-evidencias.md); no se adjuntaron imágenes en esta revisión.
 
 ## Referencias
 

@@ -1,5 +1,7 @@
 # Proyecto de aula — PassGuard
 
+El informe académico ampliado, editable en Markdown, está en [informe-academico.md](informe-academico.md). La guía para exportarlo a PDF/Word está en [docs/entrega-final/exportar-informe.md](../entrega-final/exportar-informe.md). La plantilla, institución y docente oficiales siguen pendientes de confirmación.
+
 ## Datos generales
 
 - Programa: Ingeniería de Sistemas.
@@ -44,7 +46,7 @@ El desarrollo se organiza en cuatro etapas: (1) estructura inicial, evaluación 
 
 ## Diseño y calidad
 
-La arquitectura y los flujos de datos están descritos en [docs/arquitectura.md](../arquitectura.md). Los criterios de calidad y seguridad se registran en [docs/criterios-calidad.md](../criterios-calidad.md). La suite automatizada está en `tests/` y se ejecuta con `npm run test`; la compilación se verifica con `npm run build`.
+La arquitectura y los flujos de datos están descritos en [docs/arquitectura.md](../arquitectura.md). Los criterios de calidad y seguridad se registran en [docs/criterios-calidad.md](../criterios-calidad.md). La suite automatizada está en `tests/` y se ejecuta con `npm run test`; la compilación se verifica con `npm run build`. La ejecución documentada aprobó 36 pruebas; compatibilidad visual mult navegador y WCAG siguen pendientes de prueba manual.
 
 ## Resultados y conclusiones
 

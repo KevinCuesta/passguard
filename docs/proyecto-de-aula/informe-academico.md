@@ -44,7 +44,7 @@ El resultado de zxcvbn-ts es heurístico y no mide phishing, keylogging, malware
 
 Una contraseña es un secreto memorizado que permite demostrar conocimiento. Los ataques de diccionario prueban palabras y variantes priorizadas; la fuerza bruta explora un espacio de candidatos; los ataques basados en reglas combinan ambos. Patrones como secuencias, repeticiones, palabras comunes y sustituciones previsibles hacen que el espacio efectivo de búsqueda sea menor que el alfabeto teórico. La reutilización también habilita credential stuffing: probar credenciales expuestas en otros servicios.
 
-La longitud suele aumentar el costo de adivinar, pero una cadena larga construida con una frase común no equivale necesariamente a una elección aleatoria. NIST recomienda que los verificadores comparen secretos nuevos con una lista de valores comunes, esperados o comprometidos y no impongan reglas de composición obligatorias; su mínimo de 15 caracteres aplica a contraseñas usadas como factor único de autenticación, no es una certificación para la contraseña que se analiza en esta herramienta ([NIST SP 800-63B-4](https://pages.nist.gov/800-63-4/sp800-63b/authenticators/)).
+La longitud suele aumentar el costo de adivinar, pero una cadena larga construida con una frase común no equivale necesariamente a una elección aleatoria. NIST recomienda que los verificadores comparen secretos nuevos con una lista de valores comunes, esperados o comprometidos y no impongan reglas de composición obligatorias; su mínimo de 15 caracteres aplica a contraseñas usadas como factor único de autenticación, no es una certificación para la contraseña que se analiza en esta herramienta ([National Institute of Standards and Technology (NIST), 2025](https://pages.nist.gov/800-63-4/sp800-63b/authenticators/)).
 
 ### 7.2 Combinaciones y entropía
 
@@ -52,9 +52,9 @@ Para un generador uniforme e independiente, el número teórico de cadenas de lo
 
 ### 7.3 Cifrado y hashing
 
-El cifrado transforma datos mediante una clave y permite recuperarlos mediante la operación inversa. El cifrado simétrico usa una misma clave secreta para cifrar y descifrar; AES es un estándar de bloque simétrico definido por NIST. El cifrado asimétrico usa un par de claves relacionadas, normalmente una pública y otra privada. PassGuard no cifra ni guarda contraseñas.
+El cifrado transforma datos mediante una clave y permite recuperarlos mediante la operación inversa. El cifrado simétrico usa una misma clave secreta para cifrar y descifrar; AES es un estándar de bloque simétrico definido por NIST (National Institute of Standards and Technology, 2023). El cifrado asimétrico usa un par de claves relacionadas, normalmente una pública y otra privada. PassGuard no cifra ni guarda contraseñas.
 
-El hashing transforma una entrada en un resumen; no está diseñado para recuperar la entrada. SHA-1 se usa en PassGuard exclusivamente para consultar la API de rango de Pwned Passwords; no se usa para almacenar contraseñas ni autenticar usuarios. OWASP recomienda hashing adaptativo y deliberadamente costoso —por ejemplo Argon2id, con sal única— para almacenar verificadores de contraseñas. Como PassGuard no guarda credenciales, Argon2id se explica como referente y no está implementado ([OWASP Password Storage](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html), [RFC 9106](https://www.rfc-editor.org/rfc/rfc9106)).
+El hashing transforma una entrada en un resumen; no está diseñado para recuperar la entrada. SHA-1 se usa en PassGuard exclusivamente para consultar la API de rango de Pwned Passwords (Have I Been Pwned, s. f.); no se usa para almacenar contraseñas ni autenticar usuarios. OWASP recomienda hashing adaptativo y deliberadamente costoso —por ejemplo Argon2id, con sal única— para almacenar verificadores de contraseñas. Como PassGuard no guarda credenciales, Argon2id se explica como referente y no está implementado (Biryukov et al., 2021; OWASP Foundation, s. f.).
 
 ### 7.4 Generación segura
 
@@ -62,13 +62,13 @@ El hashing transforma una entrada en un resumen; no está diseñado para recuper
 
 ### 7.5 MFA, llaves físicas y passkeys
 
-Los factores de autenticación suelen clasificarse como algo que se sabe (contraseña o PIN), algo que se posee (teléfono o llave de seguridad) y algo que se es (biometría procesada por un autenticador). MFA combina factores de categorías distintas; sumar dos secretos de conocimiento no crea por sí solo MFA. Una llave física puede realizar autenticación criptográfica resistente al phishing. FIDO2/WebAuthn y las passkeys permiten credenciales basadas en pares de claves vinculados al origen. Estos mecanismos se describen como contexto académico: PassGuard no implementa cuentas, MFA, FIDO2 ni passkeys ([OWASP MFA Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Multifactor_Authentication_Cheat_Sheet.html), [FIDO Alliance](https://fidoalliance.org/passkeys/)).
+Los factores de autenticación suelen clasificarse como algo que se sabe (contraseña o PIN), algo que se posee (teléfono o llave de seguridad) y algo que se es (biometría procesada por un autenticador). MFA combina factores de categorías distintas; sumar dos secretos de conocimiento no crea por sí solo MFA. Una llave física puede realizar autenticación criptográfica resistente al phishing. FIDO2/WebAuthn y las passkeys permiten credenciales basadas en pares de claves vinculados al origen. Estos mecanismos se describen como contexto académico: PassGuard no implementa cuentas, MFA, FIDO2 ni passkeys (FIDO Alliance, s. f.; OWASP Foundation, s. f.).
 
 ### 7.6 Contraseñas vulnerables: publicaciones 2025–2026
 
-NordPass publica su lista “Top 200” de 2025 con NordStellar e investigadores independientes. La metodología declarada analizó filtraciones públicas recientes y repositorios de la dark web entre septiembre de 2024 y septiembre de 2025, agrupó resultados por país en 44 países e indica que no adquirió ni compró datos personales. En la clasificación mundial que presenta, `123456` ocupa el primer lugar. Es un análisis de datos expuestos, no una encuesta representativa de todas las contraseñas ni un censo global de usuarios ([NordPass, metodología y resultados 2025](https://nordpass.com/most-common-passwords-list/)).
+NordPass publica su lista “Top 200” de 2025 con NordStellar e investigadores independientes. La metodología declarada analizó filtraciones públicas recientes y repositorios de la dark web entre septiembre de 2024 y septiembre de 2025, agrupó resultados por país en 44 países e indica que no adquirió ni compró datos personales. En la clasificación mundial que presenta, `123456` ocupa el primer lugar. Es un análisis de datos expuestos, no una encuesta representativa de todas las contraseñas ni un censo global de usuarios (NordPass & NordStellar, 2025).
 
-Verizon reporta que credenciales comprometidas fueron vector de acceso inicial en 22% de las brechas revisadas por su 2025 DBIR; en un subanálisis de datos de infección por infostealers, la mediana fue que solo 49% de las contraseñas de cada usuario fueran distintas entre servicios. Las poblaciones y métricas son específicas del informe ([Verizon, análisis adicional 2025](https://www.verizon.com/business/resources/articles/credential-stuffing-attacks-2025-dbir-research/)). En el DBIR 2026, una figura analiza 7.345 cuentas escaneadas: la mediana de cuentas con contraseña comprometida fue 4%; el informe señala que en ese conjunto los usuarios tenían más de cuatro veces más probabilidad de usar una contraseña comprometida que una clasificada como débil. Son datos organizacionales observados por Verizon, no prevalencia universal ([Verizon 2026 DBIR, sección “Passwords”](https://www.verizon.com/business/resources/T343/reports/2026-dbir-data-breach-investigations-report.pdf)).
+Verizon reporta que credenciales comprometidas fueron vector de acceso inicial en 22% de las brechas revisadas por su 2025 DBIR; en un subanálisis de datos de infección por infostealers, la mediana fue que solo 49% de las contraseñas de cada usuario fueran distintas entre servicios. Las poblaciones y métricas son específicas del informe (Verizon Business, 2025). En el DBIR 2026, una figura analiza 7.345 cuentas escaneadas: la mediana de cuentas con contraseña comprometida fue 4%; el informe señala que en ese conjunto los usuarios tenían más de cuatro veces más probabilidad de usar una contraseña comprometida que una clasificada como débil. Son datos organizacionales observados por Verizon, no prevalencia universal (Verizon Business, 2026).
 
 ## 8. Metodología de desarrollo
 
@@ -105,27 +105,34 @@ La matriz caso a caso se encuentra en [anexos/pruebas/matriz-casos.md](../../ane
 
 ## 14. Resultados verificables
 
-En la ejecución documentada el 10 de noviembre de 2026, `npm run test:coverage` aprobó 31 pruebas en 6 archivos: 98.82% statements, 98.33% branches, 100% functions y 98.71% lines en servicios. `npm run lint` terminó sin hallazgos. `npm run build` completó correctamente y produjo un JS inicial de 243.86 kB minificado (76.11 kB gzip). Vite emitió una advertencia por el chunk español de 839.20 kB, que se carga de forma diferida. `npm audit` y la ejecución de servidor de desarrollo se registran en [resultados de validación](../../anexos/pruebas/resultados.md) después de su ejecución final.
+En la ejecución documentada el 10 de noviembre de 2026, `npm run test` y `npm run test:coverage` aprobaron 36 pruebas en 6 archivos: 98.82% statements, 98.33% branches, 100% functions y 98.71% lines en servicios. `npm run lint` terminó sin hallazgos. `npm run build` completó correctamente y produjo un JS inicial de 243.86 kB minificado (76.11 kB gzip). Vite emitió una advertencia por el chunk español de 839.20 kB, que se carga de forma diferida. `npm audit` reportó cero vulnerabilidades. Vite respondió HTTP 200 local; el detalle y los dos builds de ruta base están en [resultados de validación](../../anexos/pruebas/resultados.md).
 
 ## 15. Criterios de calidad
 
 La matriz con descripción, indicador, método, resultado y estado se encuentra en [docs/criterios-calidad.md](../criterios-calidad.md). Compatibilidad entre navegadores, contraste medido y lector de pantalla permanecen pendientes; no se marcan como aprobados sin evidencia.
 
-## 16. Conclusiones
+## 16. Limitaciones
+
+PassGuard no autentica, no almacena credenciales y no reemplaza un gestor de contraseñas. zxcvbn-ts es una estimación; HIBP es un tercero cuyo corpus puede no cubrir todas las filtraciones. El prefijo consultado y metadatos de red salen del navegador si el usuario solicita la búsqueda. La carga inicial se redujo, pero el chunk español sigue siendo grande. La compatibilidad visual entre navegadores, medición de contraste y lectores de pantalla están pendientes de la matriz manual. No se realizó un estudio con personas ni un pentest.
+
+## 17. Conclusiones
 
 PassGuard demuestra una arquitectura cliente que mantiene en el navegador el análisis, la generación y la comparación. El uso de Web Crypto y la búsqueda de rango limita la exposición intencional de datos; las pruebas automatizadas respaldan el comportamiento técnico comprobado. La puntuación heurística y la respuesta de HIBP tienen alcances limitados, por lo que la aplicación se presenta como recurso educativo y no como servicio de autenticación o garantía de seguridad. El equipo debe revisar la demostración, completar metadatos institucionales y adjuntar capturas reales antes de la entrega.
 
-## 17. Referencias bibliográficas
+## 18. Referencias bibliográficas
 
 La lista en formato bibliográfico y las referencias técnicas están en [anexos/referencias.md](../../anexos/referencias.md). Las fuentes estadísticas y normativas se enlazan junto a sus afirmaciones para conservar contexto y metodología.
 
-## 18. Anexos
+## 19. Anexos
 
 - [Matriz de casos de prueba](../../anexos/pruebas/matriz-casos.md).
 - [Resultados de ejecución](../../anexos/pruebas/resultados.md).
 - [Registro de revisión de seguridad](../../anexos/pruebas/revision-seguridad.md).
 - [Guía para capturas reales](../../anexos/evidencias/guia-capturas.md).
+- [Índice de evidencias](../../anexos/evidencias/indice-evidencias.md).
+- [Guía para exportar el informe](../entrega-final/exportar-informe.md).
+- [Guion de sustentación](../presentacion/guion-sustentacion.md), [diapositivas sugeridas](../presentacion/estructura-diapositivas.md) y [checklist de entrega](../entrega-final/checklist-entrega.md).
 
-## 19. Evidencias pendientes del equipo
+## 20. Evidencias pendientes del equipo
 
 Las pruebas automatizadas y la compilación tienen resultados reproducibles en el repositorio; no se adjuntan imágenes fabricadas. El equipo debe capturar la aplicación ejecutándose en su navegador y conservar las imágenes sin incluir contraseñas reales. La guía enumera pantallas y condiciones para esas evidencias.
